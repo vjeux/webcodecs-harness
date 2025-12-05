@@ -1,24 +1,24 @@
 
 // == webcodecs-polyfill
 
-import {polyfillWebCodecsApi} from 'webcodecs-polyfill';
-module.exports.polyfillWebCodecsApi = async function() { polyfillWebCodecsApi() };
+// import {polyfillWebCodecsApi} from 'webcodecs-polyfill';
+// module.exports.polyfillWebCodecsApi = async function() { polyfillWebCodecsApi() };
 
 // == node-webcodecs
 
-// const webcodecs = require('node-webcodecs');
-// export const polyfillWebCodecsApi = async () => {
-// 	globalThis.VideoDecoder ??= webcodecs.VideoDecoder;
-// 	globalThis.AudioDecoder ??= webcodecs.AudioDecoder;
-// 	globalThis.VideoEncoder ??= webcodecs.VideoEncoder;
-// 	globalThis.AudioEncoder ??= webcodecs.AudioEncoder;
-// 	globalThis.EncodedVideoChunk ??= webcodecs.EncodedVideoChunk;
-// 	globalThis.EncodedAudioChunk ??= webcodecs.EncodedAudioChunk;
-// 	globalThis.VideoFrame ??= webcodecs.VideoFrame;
-// 	globalThis.VideoColorSpace ??= webcodecs.VideoColorSpace;
-// 	globalThis.AudioData ??= webcodecs.AudioData;
-// 	globalThis.DOMRectReadOnly ??= webcodecs.DOMRectReadOnly;
-// };
+const webcodecs = require('node-webcodecs');
+export const polyfillWebCodecsApi = async () => {
+	globalThis.VideoDecoder ??= webcodecs.VideoDecoder;
+	globalThis.AudioDecoder ??= webcodecs.AudioDecoder;
+	globalThis.VideoEncoder ??= webcodecs.VideoEncoder;
+	globalThis.AudioEncoder ??= webcodecs.AudioEncoder;
+	globalThis.EncodedVideoChunk ??= webcodecs.EncodedVideoChunk;
+	globalThis.EncodedAudioChunk ??= webcodecs.EncodedAudioChunk;
+	globalThis.VideoFrame ??= webcodecs.VideoFrame;
+	globalThis.VideoColorSpace ??= webcodecs.VideoColorSpace;
+	globalThis.AudioData ??= webcodecs.AudioData;
+	globalThis.DOMRectReadOnly ??= webcodecs.DOMRectReadOnly;
+};
 
 
 // == node-libav-webcodecs

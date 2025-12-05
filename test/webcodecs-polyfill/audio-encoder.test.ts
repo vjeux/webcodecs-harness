@@ -7,14 +7,14 @@
  */
 
 import { beforeAll, expect, test } from 'vitest';
-import { polyfillWebCodecsApi } from '../src/polyfill.js';
-import { toDataView } from '../src/misc.js';
+import { polyfillWebCodecsApi } from '../../src/polyfill.js';
+import { toDataView } from './misc.js';
 
 beforeAll(async () => {
 	await polyfillWebCodecsApi();
 });
 
-test('AudioEncoder lifecycle', { timeout: 60_000 }, async () => {
+test('AudioEncoder lifecycle', { timeout: 10_000 }, async () => {
 	let first = true;
 
 	const encoder = new AudioEncoder({

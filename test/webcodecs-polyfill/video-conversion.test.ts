@@ -9,7 +9,6 @@
 import { beforeAll, expect, test } from 'vitest';
 import {
 	ALL_FORMATS,
-	AudioSampleSink,
 	BufferSource,
 	BufferTarget,
 	Conversion,
@@ -17,19 +16,20 @@ import {
 	Input,
 	Mp4OutputFormat,
 	Output,
+	VideoSampleSink,
 } from 'mediabunny';
-import { polyfillWebCodecsApi } from '../src/polyfill.js';
+import { polyfillWebCodecsApi } from '../../src/polyfill.js';
 
-const filePath = './public/small_buck_bunny.mp4';
+const filePath = './test/webcodecs-polyfill/small_buck_bunny.mp4';
 
 beforeAll(async () => {
 	await polyfillWebCodecsApi();
 });
 
 // These conversion tests are powerful as they test large parts of the whole pipeline:
-// EncodedAudioChunk -> AudioDecoder -> AudioData -> AudioEncoder -> EncodedAudioChunk -> AudioDecoder -> AudioData
+// EncodedVideoChunk -> VideoDecoder -> VideoFrame -> VideoEncoder -> EncodedVideoChunk -> VideoDecoder -> VideoFrame
 
-test('Conversion: encode and decode AAC', { timeout: 60_000 }, async () => {
+test('Conversion: encode and decode AVC', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
@@ -44,11 +44,11 @@ test('Conversion: encode and decode AAC', { timeout: 60_000 }, async () => {
 		input,
 		output,
 		video: {
-			discard: true,
+			forceTranscode: true,
+			codec: 'avc',
 		},
 		audio: {
-			forceTranscode: true,
-			codec: 'aac',
+			discard: true,
 		},
 		trim: {
 			start: 0,
@@ -62,15 +62,16 @@ test('Conversion: encode and decode AAC', { timeout: 60_000 }, async () => {
 		formats: ALL_FORMATS,
 	});
 
-	const audioTrack = (await newInput.getPrimaryAudioTrack())!;
-	const sink = new AudioSampleSink(audioTrack);
+	const videoTrack = (await newInput.getPrimaryVideoTrack())!;
+	const sink = new VideoSampleSink(videoTrack);
 
 	for await (using sample of sink.samples(0, 1)) {
-		expect(sample.sampleRate).toBe(48000);
+		expect(sample.displayWidth).toBe(1920);
+		expect(sample.displayHeight).toBe(1080);
 	}
 });
 
-test('Conversion: encode and decode Opus', { timeout: 60_000 }, async () => {
+test('Conversion: encode and decode HEVC', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
@@ -85,11 +86,11 @@ test('Conversion: encode and decode Opus', { timeout: 60_000 }, async () => {
 		input,
 		output,
 		video: {
-			discard: true,
+			forceTranscode: true,
+			codec: 'hevc',
 		},
 		audio: {
-			forceTranscode: true,
-			codec: 'opus',
+			discard: true,
 		},
 		trim: {
 			start: 0,
@@ -103,15 +104,16 @@ test('Conversion: encode and decode Opus', { timeout: 60_000 }, async () => {
 		formats: ALL_FORMATS,
 	});
 
-	const audioTrack = (await newInput.getPrimaryAudioTrack())!;
-	const sink = new AudioSampleSink(audioTrack);
+	const videoTrack = (await newInput.getPrimaryVideoTrack())!;
+	const sink = new VideoSampleSink(videoTrack);
 
 	for await (using sample of sink.samples(0, 1)) {
-		expect(sample.sampleRate).toBe(48000);
+		expect(sample.displayWidth).toBe(1920);
+		expect(sample.displayHeight).toBe(1080);
 	}
 });
 
-test('Conversion: encode and decode Vorbis', { timeout: 60_000 }, async () => {
+test('Conversion: encode and decode VP8', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
@@ -126,11 +128,11 @@ test('Conversion: encode and decode Vorbis', { timeout: 60_000 }, async () => {
 		input,
 		output,
 		video: {
-			discard: true,
+			forceTranscode: true,
+			codec: 'vp8',
 		},
 		audio: {
-			forceTranscode: true,
-			codec: 'vorbis',
+			discard: true,
 		},
 		trim: {
 			start: 0,
@@ -144,15 +146,16 @@ test('Conversion: encode and decode Vorbis', { timeout: 60_000 }, async () => {
 		formats: ALL_FORMATS,
 	});
 
-	const audioTrack = (await newInput.getPrimaryAudioTrack())!;
-	const sink = new AudioSampleSink(audioTrack);
+	const videoTrack = (await newInput.getPrimaryVideoTrack())!;
+	const sink = new VideoSampleSink(videoTrack);
 
 	for await (using sample of sink.samples(0, 1)) {
-		expect(sample.sampleRate).toBe(48000);
+		expect(sample.displayWidth).toBe(1920);
+		expect(sample.displayHeight).toBe(1080);
 	}
 });
 
-test('Conversion: encode and decode FLAC', { timeout: 60_000 }, async () => {
+test('Conversion: encode and decode VP9', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
@@ -167,11 +170,11 @@ test('Conversion: encode and decode FLAC', { timeout: 60_000 }, async () => {
 		input,
 		output,
 		video: {
-			discard: true,
+			forceTranscode: true,
+			codec: 'vp9',
 		},
 		audio: {
-			forceTranscode: true,
-			codec: 'flac',
+			discard: true,
 		},
 		trim: {
 			start: 0,
@@ -185,15 +188,16 @@ test('Conversion: encode and decode FLAC', { timeout: 60_000 }, async () => {
 		formats: ALL_FORMATS,
 	});
 
-	const audioTrack = (await newInput.getPrimaryAudioTrack())!;
-	const sink = new AudioSampleSink(audioTrack);
+	const videoTrack = (await newInput.getPrimaryVideoTrack())!;
+	const sink = new VideoSampleSink(videoTrack);
 
 	for await (using sample of sink.samples(0, 1)) {
-		expect(sample.sampleRate).toBe(48000);
+		expect(sample.displayWidth).toBe(1920);
+		expect(sample.displayHeight).toBe(1080);
 	}
 });
 
-test('Conversion: encode and decode MP3', { timeout: 60_000 }, async () => {
+test('Conversion: encode and decode AV1', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
@@ -208,11 +212,11 @@ test('Conversion: encode and decode MP3', { timeout: 60_000 }, async () => {
 		input,
 		output,
 		video: {
-			discard: true,
+			forceTranscode: true,
+			codec: 'av1',
 		},
 		audio: {
-			forceTranscode: true,
-			codec: 'mp3',
+			discard: true,
 		},
 		trim: {
 			start: 0,
@@ -226,10 +230,11 @@ test('Conversion: encode and decode MP3', { timeout: 60_000 }, async () => {
 		formats: ALL_FORMATS,
 	});
 
-	const audioTrack = (await newInput.getPrimaryAudioTrack())!;
-	const sink = new AudioSampleSink(audioTrack);
+	const videoTrack = (await newInput.getPrimaryVideoTrack())!;
+	const sink = new VideoSampleSink(videoTrack);
 
 	for await (using sample of sink.samples(0, 1)) {
-		expect(sample.sampleRate).toBe(48000);
+		expect(sample.displayWidth).toBe(1920);
+		expect(sample.displayHeight).toBe(1080);
 	}
 });

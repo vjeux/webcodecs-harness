@@ -7,54 +7,54 @@
  */
 
 import { beforeAll, expect, test } from 'vitest';
-import { polyfillWebCodecsApi } from '../src/polyfill.js';
+import { polyfillWebCodecsApi } from '../../src/polyfill.js';
 import { ALL_FORMATS, EncodedPacketSink, FilePathSource, Input } from 'mediabunny';
-import { AsyncMutex } from '../src/misc.js';
+import { AsyncMutex } from './misc.js';
 
-const filePath = './public/small_buck_bunny.mp4';
+const filePath = './test/webcodecs-polyfill/small_buck_bunny.mp4';
 
 beforeAll(async () => {
 	await polyfillWebCodecsApi();
 });
 
-test('VideoDecoder lifecycle', { timeout: 60_000 }, async () => {
+test('AudioDecoder lifecycle', { timeout: 10_000 }, async () => {
 	using input = new Input({
 		source: new FilePathSource(filePath),
 		formats: ALL_FORMATS,
 	});
 
-	const videoTrack = (await input.getPrimaryVideoTrack())!;
-	const decoderConfig = (await videoTrack.getDecoderConfig())!;
+	const audioTrack = (await input.getPrimaryAudioTrack())!;
+	const decoderConfig = (await audioTrack.getDecoderConfig())!;
 
 	let lastTimestamp = -Infinity;
 
 	const mutex = new AsyncMutex();
 	const valuesSeen = new Set<number>();
 
-	const decoder = new VideoDecoder({
+	const decoder = new AudioDecoder({
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		output: async (frame) => {
+		output: async (audioData) => {
 			using lock = mutex.lock();
 			if (lock.pending) await lock.ready;
 
-			expect(frame.format).toBe('I420');
-			expect(frame.displayWidth).toBe(videoTrack.displayWidth);
-			expect(frame.displayHeight).toBe(videoTrack.displayHeight);
-			expect(frame.timestamp).toBeGreaterThan(lastTimestamp);
+			expect(audioData.format).not.toBeNull();
+			expect(audioData.sampleRate).toBe(audioTrack.sampleRate);
+			expect(audioData.numberOfChannels).toBe(audioTrack.numberOfChannels);
+			expect(audioData.timestamp).toBeGreaterThan(lastTimestamp);
 
-			const allocSize = frame.allocationSize();
+			const allocSize = audioData.allocationSize({ planeIndex: 0 });
 			const buffer = new Uint8Array(allocSize);
-			await frame.copyTo(buffer);
+			audioData.copyTo(buffer, { planeIndex: 0 });
 
 			valuesSeen.add(buffer[0]);
 
-			lastTimestamp = frame.timestamp;
-			frame.close();
+			lastTimestamp = audioData.timestamp;
+			audioData.close();
 
-			expect(frame.format).toBeNull();
-			expect(frame.displayWidth).toBe(0);
-			expect(frame.displayHeight).toBe(0);
-			expect(frame.timestamp).toBe(lastTimestamp);
+			expect(audioData.format).toBeNull();
+			expect(audioData.sampleRate).toBe(0);
+			expect(audioData.numberOfFrames).toBe(0);
+			expect(audioData.numberOfChannels).toBe(0);
 		},
 		error: (e) => { throw e; },
 	});
@@ -63,9 +63,9 @@ test('VideoDecoder lifecycle', { timeout: 60_000 }, async () => {
 	decoder.configure(decoderConfig);
 	expect(decoder.state === 'configured');
 
-	const sink = new EncodedPacketSink(videoTrack);
+	const sink = new EncodedPacketSink(audioTrack);
 	for await (const packet of sink.packets()) {
-		const chunk = packet.toEncodedVideoChunk();
+		const chunk = packet.toEncodedAudioChunk();
 		decoder.decode(chunk);
 
 		expect(decoder.decodeQueueSize).not.toBe(0);
