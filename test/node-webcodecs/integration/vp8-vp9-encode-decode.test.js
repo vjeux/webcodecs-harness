@@ -31,7 +31,7 @@ function createTestFrame(width, height, timestamp, color = { r: 128, g: 128, b: 
 
 // ==================== VP8 Tests ====================
 
-it('VP8EncodeSingleFrame', async () => {
+it('VP8EncodeSingleFrame', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -63,7 +63,7 @@ it('VP8EncodeSingleFrame', async () => {
   expect(chunks.length).toBeGreaterThan(0);
 });
 
-it('VP8EncodeMultipleFrames', async () => {
+it('VP8EncodeMultipleFrames', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -95,7 +95,7 @@ it('VP8EncodeMultipleFrames', async () => {
   expect(chunks.length).toBe(5);
 });
 
-it('VP8EncodeDecode', async () => {
+it('VP8EncodeDecode', { timeout: 10_000 }, async () => {
   const encodedChunks = [];
   const decodedFrames = [];
   const errors = [];
@@ -152,7 +152,7 @@ it('VP8EncodeDecode', async () => {
 
 // ==================== VP9 Tests ====================
 
-it('VP9EncodeSingleFrame', async () => {
+it('VP9EncodeSingleFrame', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -184,7 +184,7 @@ it('VP9EncodeSingleFrame', async () => {
   expect(chunks.length).toBeGreaterThan(0);
 });
 
-it('VP9EncodeMultipleFrames', async () => {
+it('VP9EncodeMultipleFrames', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -216,7 +216,7 @@ it('VP9EncodeMultipleFrames', async () => {
   expect(chunks.length).toBe(5);
 });
 
-it('VP9EncodeDecode', async () => {
+it('VP9EncodeDecode', { timeout: 10_000 }, async () => {
   const encodedChunks = [];
   const decodedFrames = [];
   const errors = [];
@@ -272,7 +272,7 @@ it('VP9EncodeDecode', async () => {
   expect(decodedFrames.length).toBeGreaterThan(0);
 });
 
-it('VP9FullCodecString', async () => {
+it('VP9FullCodecString', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 

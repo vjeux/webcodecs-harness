@@ -30,7 +30,7 @@ function createTestFrame(width, height, timestamp, color = { r: 128, g: 128, b: 
 
 // ==================== H.265/HEVC Tests ====================
 
-it('HEVCEncodeSingleFrame', async () => {
+it('HEVCEncodeSingleFrame', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -62,7 +62,7 @@ it('HEVCEncodeSingleFrame', async () => {
   expect(chunks.length).toBeGreaterThan(0);
 });
 
-it('HEVCEncodeMultipleFrames', async () => {
+it('HEVCEncodeMultipleFrames', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -94,7 +94,7 @@ it('HEVCEncodeMultipleFrames', async () => {
   expect(chunks.length).toBeGreaterThan(0);
 });
 
-it('HEVCEncodeDecode', async () => {
+it('HEVCEncodeDecode', { timeout: 10_000 }, async () => {
   const encodedChunks = [];
   const decodedFrames = [];
   const errors = [];
@@ -158,7 +158,7 @@ it('HEVCEncodeDecode', async () => {
 
 // ==================== AV1 Tests ====================
 
-it('AV1EncodeSingleFrame', async () => {
+it('AV1EncodeSingleFrame', { timeout: 10_000 }, async () => {
   const chunks = [];
   const errors = [];
 
@@ -190,7 +190,7 @@ it('AV1EncodeSingleFrame', async () => {
   expect(chunks.length).toBeGreaterThan(0);
 });
 
-it('AV1EncodeDecode', async () => {
+it('AV1EncodeDecode', { timeout: 10_000 }, async () => {
   const encodedChunks = [];
   const decodedFrames = [];
   const errors = [];

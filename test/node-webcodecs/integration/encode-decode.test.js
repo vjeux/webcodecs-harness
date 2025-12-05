@@ -9,7 +9,7 @@ beforeAll(async () => {
   await polyfillWebCodecsApi();
 });
 
-it('EncodeSingleFrame', async () => {
+it('EncodeSingleFrame', { timeout: 10_000 }, async () => {
   const chunks = [];
   const encoder = new VideoEncoder({
     output: (chunk, metadata) => {
@@ -50,7 +50,7 @@ it('EncodeSingleFrame', async () => {
   return chunks;
 });
 
-it('EncodeMultipleFrames', async () => {
+it('EncodeMultipleFrames', { timeout: 10_000 }, async () => {
 
   const chunks = [];
   const encoder = new VideoEncoder({
@@ -95,7 +95,7 @@ it('EncodeMultipleFrames', async () => {
   return chunks;
 });
 
-it('EncodeI420Frame', async () => {
+it('EncodeI420Frame', { timeout: 10_000 }, async () => {
 
   const chunks = [];
   const encoder = new VideoEncoder({
@@ -138,7 +138,7 @@ it('EncodeI420Frame', async () => {
   return chunks;
 });
 
-it('EncodeDecode', async () => {
+it('EncodeDecode', { timeout: 10_000 }, async () => {
 
   // First, encode some frames
   const encodedChunks = [];

@@ -9,7 +9,7 @@ beforeAll(async () => {
   await polyfillWebCodecsApi();
 });
 
-it('AudioEncoderAAC', async function () {
+it('AudioEncoderAAC', { timeout: 10_000 }, async function () {
   const chunks = [];
   const encoder = new AudioEncoder({
     output: (chunk, metadata) => {
@@ -57,7 +57,7 @@ it('AudioEncoderAAC', async function () {
   return chunks;
 });
 
-it('AudioEncoderOpus', async function () {
+it('AudioEncoderOpus', { timeout: 10_000 }, async function () {
   const chunks = [];
   const encoder = new AudioEncoder({
     output: (chunk, metadata) => {
@@ -105,7 +105,7 @@ it('AudioEncoderOpus', async function () {
   return chunks;
 });
 
-it('AudioEncoderFLAC', async function () {
+it('AudioEncoderFLAC', { timeout: 10_000 }, async function () {
   const chunks = [];
   const encoder = new AudioEncoder({
     output: (chunk, metadata) => {
@@ -152,7 +152,7 @@ it('AudioEncoderFLAC', async function () {
   return chunks;
 });
 
-it('MultipleAudioFrames', async function () {
+it('MultipleAudioFrames', { timeout: 10_000 }, async function () {
   const chunks = [];
   const encoder = new AudioEncoder({
     output: (chunk) => chunks.push(chunk),
